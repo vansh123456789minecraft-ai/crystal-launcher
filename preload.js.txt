@@ -1,0 +1,18 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('api', {
+  getConfig: () => ipcRenderer.invoke('config:get'),
+  saveConfig: (c) => ipcRenderer.invoke('config:set', c),
+  versions: () => ipcRenderer.invoke('versions:list'),
+  launch: (o) => ipcRenderer.invoke('launch', o),
+  kill: () => ipcRenderer.invoke('kill'),
+  detectJava: () => ipcRenderer.invoke('java:detect'),
+  pickDir: () => ipcRenderer.invoke('pick:dir'),
+  pickFile: () => ipcRenderer.invoke('pick:file'),
+  openFolder: (p) => ipcRenderer.invoke('open:folder', p),
+  min: () => ipcRenderer.send('win:min'),
+  close: () => ipcRenderer.send('win:close'),
+  onProgress: (cb) => ipcRenderer.on('progress', (_e, d) => cb(d)),
+  onLog: (cb) => ipcRenderer.on('log', (_e, d) => cb(d)),
+  onDone: (cb) => ipcRenderer.on('done', (_e, d) => cb(d))
+});

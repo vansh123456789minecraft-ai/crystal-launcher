@@ -1,0 +1,34 @@
+{
+  "name": "crystal-launcher",
+  "version": "1.0.0",
+  "description": "Crystal Launcher - offline Minecraft launcher",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "ai.crystal.launcher",
+    "productName": "Crystal Launcher",
+    "files": [
+      "main.js",
+      "preload.js",
+      "ui/**/*"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^24.13.3"
+  },
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
+}

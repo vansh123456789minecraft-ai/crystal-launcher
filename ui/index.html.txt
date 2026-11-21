@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Crystal Launcher</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="tint"></div>
+<div id="crystals" aria-hidden="true">
+  <svg class="crystal c1" viewBox="0 0 90 120"><polygon points="45,4 80,42 45,116 10,42"/><polygon class="hl" points="45,4 80,42 45,116"/></svg>
+  <svg class="crystal c2" viewBox="0 0 90 120"><polygon points="45,4 80,42 45,116 10,42"/></svg>
+  <svg class="crystal c3" viewBox="0 0 90 120"><polygon points="45,4 80,42 45,116 10,42"/></svg>
+</div>
+
+<div id="app">
+  <header class="titlebar">
+    <svg class="logo" viewBox="0 0 24 24"><polygon points="12,1 21,9 12,23 3,9"/></svg>
+    <span class="brand">Crystal</span>
+    <span class="tag">offline</span>
+    <div class="spacer"></div>
+    <button class="tb" id="btnSettings" title="Settings">⚙</button>
+    <button class="tb" id="btnMin" title="Minimize">–</button>
+    <button class="tb close" id="btnClose" title="Close">×</button>
+  </header>
+
+  <main class="body">
+    <aside class="versions">
+      <div class="label">Versions</div>
+      <input id="search" class="field sm" placeholder="search…" />
+      <div id="versionList" class="vlist"></div>
+    </aside>
+
+    <section class="panel">
+      <div class="card">
+        <div class="label">Offline account</div>
+        <div class="row">
+          <div class="avatar"></div>
+          <input id="username" class="field" maxlength="16" placeholder="username" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row between"><span class="label">Memory</span><span id="ramVal" class="accent">6 GB</span></div>
+        <input id="ram" type="range" min="1024" max="16384" step="512" value="6144" />
+        <div class="row between tiny"><span>1 GB</span><span>16 GB</span></div>
+      </div>
+
+      <div class="row gap">
+        <div class="card grow">
+          <div class="label">Java</div>
+          <div id="javaInfo" class="small">auto-detect</div>
+        </div>
+        <div class="card grow">
+          <div class="label">Resolution</div>
+          <div id="resInfo" class="small">1280 × 720</div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <button id="play" class="play">Play</button>
+      <div class="bar"><div id="barFill"></div></div>
+      <div id="status" class="small">Ready</div>
+    </section>
+  </main>
+
+  <section id="logWrap" class="logwrap">
+    <div class="row between">
+      <span class="label">Log</span>
+      <button class="tb" id="btnClear">clear</button>
+    </div>
+    <pre id="log"></pre>
+  </section>
+</div>
+
+<div id="settings" class="sheet">
+  <div class="row between">
+    <span class="label">Settings</span>
+    <button class="tb" id="btnCloseSettings">×</button>
+  </div>
+  <div class="card">
+    <div class="label">Java executable</div>
+    <div class="row gap">
+      <input id="javaPath" class="field" placeholder="auto-detect" />
+      <button class="btn" id="btnJava">browse</button>
+    </div>
+    <div id="javaFound" class="small muted"></div>
+  </div>
+  <div class="card">
+    <div class="label">Window size</div>
+    <div class="row gap">
+      <input id="w" class="field sm" type="number" value="1280" />
+      <input id="h" class="field sm" type="number" value="720" />
+      <label class="check"><input id="customRes" type="checkbox" /> custom</label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row between">
+      <span class="label">Effects</span>
+      <label class="check"><input id="effects" type="checkbox" checked /> blur &amp; animation</label>
+    </div>
+    <div class="small muted">Turn off for maximum performance on weak machines.</div>
+  </div>
+  <div class="card">
+    <div class="label">Game folder</div>
+    <div class="row gap">
+      <button class="btn" id="btnFolder">open</button>
+      <span class="small muted">appdata › CrystalLauncher › minecraft</span>
+    </div>
+  </div>
+</div>
+
+<script src="renderer.js"></script>
+</body>
+</html>
