@@ -8,7 +8,10 @@ const https = require('https');
 const crypto = require('crypto');
 const { spawn, spawnSync } = require('child_process');
 const AdmZip = require('adm-zip');
-
+app.disableHardwareAcceleration();
+process.on('uncaughtException', (err) => {
+  try { fs.appendFileSync(path.join(os.tmpdir(), 'crystal-crash.log'), String(err && err.stack || err) + '\n'); } catch {}
+});
 app.commandLine.appendSwitch('enable-transparent-visuals');
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 
@@ -49,8 +52,11 @@ function createWindow() {
       contextIsolation: true, nodeIntegration: false, backgroundThrottling: false
     }
   });
-  win.loadFile(path.join(__dirname, 'ui', 'index.html'));
+    win.loadFile(path.join(__dirname, 'ui', 'index.html')).catch(e => {
+    try { fs.appendFileSync(path.join(os.tmpdir(), 'crystal-crash.log'), 'loadFile failed: ' + e.message + '\n'); } catch {}
+  });
   win.once('ready-to-show', () => win.show());
+  setTimeout(() => { if (win && !win.isVisible()) win.show(); }, 3000);
 }
 
 ipcMain.on('win:min', () => win && win.minimize());
