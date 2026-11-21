@@ -376,8 +376,12 @@ ipcMain.handle('launch', async (_e, opts) => {
       path: logConfig
     };
 
-    const features = { has_custom_resolution: !!cfg.customRes };
-    const fill = (s) => String(s).replace(/\$\{([a-z_]+)\}/gi, (m, k) => (k in subs ? subs[k] : ''));
+        const features = { has_custom_resolution: !!cfg.customRes };
+    const fill = (s) => String(s).replace(/\$\{([a-z_]+)\}/gi, (m, k) => {
+      const v = subs[k];
+      if (Array.isArray(v)) return v.join(subs.classpath_separator);
+      return (k in subs ? v : '');
+    });
 
     const args = [];
     const ram = Math.max(1024, Math.min(32768, Number(cfg.ram) || 4096));
@@ -389,17 +393,23 @@ ipcMain.handle('launch', async (_e, opts) => {
       '-XX:G1MixedGCLiveThresholdPercent=90', '-XX:G1RSetUpdatingPauseTimePercent=5',
       '-XX:SurvivorRatio=32', '-XX:MaxTenuringThreshold=1', '-Dusing.aikars.flags=https://mcflags.emc.gs');
 
-    const jvm = (version.arguments && version.arguments.jvm) || [];
+        const jvm = (version.arguments && version.arguments.jvm) || [];
     for (const a of jvm) {
       if (typeof a === 'string') args.push(fill(a));
-      else if (ruleAllows(a.rules, features)) for (const v of a.value) args.push(fill(v));
+      else if (ruleAllows(a.rules, features)) {
+        const vals = Array.isArray(a.value) ? a.value : [a.value];
+        for (const v of vals) args.push(fill(v));
+      }
     }
 
     args.push(version.mainClass);
     if (version.arguments && version.arguments.game) {
       for (const a of version.arguments.game) {
         if (typeof a === 'string') args.push(fill(a));
-        else if (ruleAllows(a.rules, features)) for (const v of a.value) args.push(fill(v));
+        else if (ruleAllows(a.rules, features)) {
+          const vals = Array.isArray(a.value) ? a.value : [a.value];
+          for (const v of vals) args.push(fill(v));
+        }
       }
     } else if (version.minecraftArguments) {
       for (const a of version.minecraftArguments.split(' ')) args.push(fill(a));
