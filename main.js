@@ -55,12 +55,17 @@ function createWindow() {
     win.loadFile(path.join(__dirname, 'ui', 'index.html')).catch(e => {
     try { fs.appendFileSync(path.join(os.tmpdir(), 'crystal-crash.log'), 'loadFile failed: ' + e.message + '\n'); } catch {}
   });
-  win.once('ready-to-show', () => win.show());
+    win.once('ready-to-show', () => win.show());
+  win.on('enter-full-screen', () => win.webContents.send('fullscreen-changed', true));
+  win.on('leave-full-screen', () => win.webContents.send('fullscreen-changed', false));
+}
   setTimeout(() => { if (win && !win.isVisible()) win.show(); }, 3000);
 }
 
 ipcMain.on('win:min', () => win && win.minimize());
 ipcMain.on('win:close', () => win && win.close());
+ipcMain.on('win:fullscreen', () => { if (win) win.setFullScreen(!win.isFullScreen()); });
+ipcMain.handle('win:is-fullscreen', () => win ? win.isFullScreen() : false);
 
 const sha1File = (p) => new Promise((res, rej) => {
   const h = crypto.createHash('sha1');
